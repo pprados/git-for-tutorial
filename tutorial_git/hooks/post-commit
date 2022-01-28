@@ -1,0 +1,15 @@
+#!/bin/bash
+main=student
+CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
+if [ "$CURRENT_BRANCH" != $main ]; then
+  git rebase -q $CURRENT_BRANCH $main
+  git checkout -q -f soluce -- purge.sh
+  git rm -q --cached purge.sh
+  if [ -e purge.sh ] ; then
+    purge.sh
+    rm purge.sh
+  fi
+  git commit -q --amend --no-edit
+  echo "Branch '$main' is purged and updated"
+  git checkout -q $CURRENT_BRANCH
+fi
